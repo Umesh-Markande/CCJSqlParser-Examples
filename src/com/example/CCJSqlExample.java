@@ -52,7 +52,7 @@ public class CCJSqlExample {
 		Select select = (Select) st;
 		PlainSelect ps = (PlainSelect) select.getSelectBody();
 		
-		//set aliase if not provide
+		//set aliase if not provided
 		
 		setAliase(select);
 		
@@ -74,7 +74,7 @@ public class CCJSqlExample {
 		                Column col = (Column) expr;
 		                //System.out.println(col.getColumnName());		// only column name without alise  hh.dffs output dffs
 		                Table table = col.getTable();
-		                //System.out.println(table.getFullyQualifiedName());
+		                System.out.println(table.getFullyQualifiedName());	// Table alias of column like hh.test output hh
 		                selectColumnAliase.add("".equals(table.getFullyQualifiedName()) ? col.getColumnName() : table.getFullyQualifiedName());
 		            }
 			 }
@@ -91,14 +91,14 @@ public class CCJSqlExample {
 		// join sub select item visitor
 		
 		select.getSelectBody().accept(new SelectVisitorAdapter(){
-            @Override
-            public void visit(PlainSelect plainSelect) {
-                plainSelect.getFromItem().accept(fromJoinSubSelectVisitor);
-                if (plainSelect.getJoins()!=null){
-                   plainSelect.getJoins().forEach(join -> join.getRightItem().accept(fromJoinSubSelectVisitor));
-                }
-            }
-        });
+		    @Override
+		    public void visit(PlainSelect plainSelect) {
+			plainSelect.getFromItem().accept(fromJoinSubSelectVisitor);
+			if (plainSelect.getJoins()!=null){
+			   plainSelect.getJoins().forEach(join -> join.getRightItem().accept(fromJoinSubSelectVisitor));
+			}
+		    }
+		});
 		
 		//join table visitor
 		
@@ -125,80 +125,80 @@ public class CCJSqlExample {
 		String query = ps.toString();
 		query = query.replace("'{{", "");
 		query = query.replace("}}'", "");
-       System.out.println(query);
+       		System.out.println(query);
 	
 	}	
 	private static void processJoinItem(FromItem fromItem) {
-        System.out.println("fromItem=" + fromItem);
-    }
+        	System.out.println("fromItem=" + fromItem);
+    	}
 	
 	private final static FromItemVisitorAdapter fromJoinSubSelectVisitor = new FromItemVisitorAdapter() {
-        @Override
-        public void visit(SubSelect subSelect) {
-            System.out.println("subselect=" + subSelect);
-            PlainSelect ps = (PlainSelect) subSelect.getSelectBody();
-            /*String whereCondition = String.valueOf(ps.getWhere());
-            if(ps.getWhere() != null) {
-            	// iterate where condition
-            }*/
+		@Override
+		public void visit(SubSelect subSelect) {
+		    System.out.println("subselect=" + subSelect);
+		    PlainSelect ps = (PlainSelect) subSelect.getSelectBody();
+		    /*String whereCondition = String.valueOf(ps.getWhere());
+		    if(ps.getWhere() != null) {
+			// iterate where condition
+		    }*/
 
-        }
+		}
 
-        @Override
-        public void visit(Table table) {
-            System.out.println("table=" + table);
-        }
-        
-        public void visit(SubJoin  subjoin) {
-        	System.out.println(subjoin.toString());
-        }
-    } ;
+		@Override
+		public void visit(Table table) {
+		    System.out.println("table=" + table);
+		}
 
-    public static String parseWhere(String where) throws JSQLParserException {
-    	Expression expr = CCJSqlParserUtil.parseCondExpression(where);
-        StringBuilder b = new StringBuilder();
-        expr.accept(new ExpressionDeParser(null, b) {
-            int depth = 0;
-            @Override
-            public void visit(Parenthesis parenthesis) {
-                if (parenthesis.isNot()) {
-                    getBuffer().append("NOT");
-                }
-                depth++;
-                parenthesis.getExpression().accept(this);
-                depth--;
-            } 
-           @Override
-            public void visit(OrExpression orExpression) {
-                visitBinaryExpr(orExpression, "OR");
-            }
-            @Override
-            public void visit(AndExpression andExpression) {
-                visitBinaryExpr(andExpression, "AND");
-            }
+		public void visit(SubJoin  subjoin) {
+			System.out.println(subjoin.toString());
+		}
+    	} ;
 
-            private void visitBinaryExpr(BinaryExpression expr, String operator) {
-                if (expr.isNot()) {
-                    getBuffer().append("NOT");
-                }
-                if (!(expr.getLeftExpression() instanceof OrExpression)
-                        && !(expr.getLeftExpression() instanceof AndExpression)
-                        && !(expr.getLeftExpression() instanceof Parenthesis)) {
-                     String string = expr.getLeftExpression().toString();
-                     System.out.println(string);
-                }
-                expr.getLeftExpression().accept(this);
-                if (!(expr.getRightExpression() instanceof OrExpression)
-                        && !(expr.getRightExpression() instanceof AndExpression)
-                        && !(expr.getRightExpression() instanceof Parenthesis)) {
-                    String string = expr.getRightExpression().toString();
-                    System.out.println(string);
-                }
-                expr.getRightExpression().accept(this);
-            }
-        });
-       return expr.toString();
-    }
+    	public static String parseWhere(String where) throws JSQLParserException {
+		Expression expr = CCJSqlParserUtil.parseCondExpression(where);
+		StringBuilder b = new StringBuilder();
+		expr.accept(new ExpressionDeParser(null, b) {
+		    int depth = 0;
+		    @Override
+		    public void visit(Parenthesis parenthesis) {
+			if (parenthesis.isNot()) {
+			    getBuffer().append("NOT");
+			}
+			depth++;
+			parenthesis.getExpression().accept(this);
+			depth--;
+		    } 
+		   @Override
+		    public void visit(OrExpression orExpression) {
+			visitBinaryExpr(orExpression, "OR");
+		    }
+		    @Override
+		    public void visit(AndExpression andExpression) {
+			visitBinaryExpr(andExpression, "AND");
+		    }
+
+		    private void visitBinaryExpr(BinaryExpression expr, String operator) {
+			if (expr.isNot()) {
+			    getBuffer().append("NOT");
+			}
+			if (!(expr.getLeftExpression() instanceof OrExpression)
+				&& !(expr.getLeftExpression() instanceof AndExpression)
+				&& !(expr.getLeftExpression() instanceof Parenthesis)) {
+			     String string = expr.getLeftExpression().toString();
+			     System.out.println(string);
+			}
+			expr.getLeftExpression().accept(this);
+			if (!(expr.getRightExpression() instanceof OrExpression)
+				&& !(expr.getRightExpression() instanceof AndExpression)
+				&& !(expr.getRightExpression() instanceof Parenthesis)) {
+			    String string = expr.getRightExpression().toString();
+			    System.out.println(string);
+			}
+			expr.getRightExpression().accept(this);
+		    }
+		});
+	       return expr.toString();
+    	}
 	
 	public static void  setAliase(Select select) {
 		boolean firstRun = true;
