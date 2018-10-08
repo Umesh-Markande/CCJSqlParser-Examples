@@ -33,14 +33,30 @@ import net.sf.jsqlparser.util.deparser.ExpressionDeParser;
 public class CCJSqlExample {
 
 	public static void main(String[] args) throws JSQLParserException {
-		String varname1 = "" + "SELECT hallprefs.studentname as fdsf " + "    , hh.studentid as dfsd "
-				+ "    , hh.studentdesc " + "    , max(gkhk) , min( jgjg), hh.hallname,(select te from ta where fsdf = fsdf) "
-				+ ", ffsdf fd , ferwfsdfs frere FROM students " + "INNER JOIN hallprefs "
-				+ "    on ss.studentid = hallprefs.studentid left outer join fdsff on fsdfsfd = fsff "
-				+ "INNER JOIN halls hh " + "    on hp.hallid = hh.hallid cross join (select tst from tsdfs) where "
-				+ " gh=jgjh and tsfds = sdfd or fsdfsf = fdsff and (fdsfsf = fdsf or fdsfsf = fdfsf)"
-				+ " and lfsdf like '%fdsf%' and (fsdfs between 99 and 778) and fsdfs < 877 ";
-		// + " on hp.hallid = hh.hallid cross join dfdf where gh=jgjh ";
+		String varname1 = "SELECT  hallprefs.studentname AS fdsf , "
+				+ "                hh.studentid AS dfsd , "
+				+ "                hh.studentdesc , Max(gkhk) , Min( jgjg), "
+				+ "                hh.hallname, "
+				+ "                ( SELECT te FROM ta  WHERE  fsdf = fsdf) , "
+				+ "                ffsdf fd , "
+				+ "                ferwfsdfs frere "
+				+ "FROM            students "
+				+ "INNER JOIN      hallprefs "
+				+ "ON              ss.studentid = hallprefs.studentid "
+				+ "LEFT OUTER JOIN fdsff "
+				+ "ON              fsdfsfd = fsff "
+				+ "INNER JOIN      halls hh \" + \" "
+				+ "ON              hp.hallid = hh.hallid "
+				+ "CROSS JOIN ( SELECT tst   FROM   tsdfs) "
+			     // + " cross join dfdf where gh=jgjh ";
+				+ "WHERE gh=jgjh "
+				+ "AND   tsfds = sdfd "
+				+ "OR    fsdfsf = fdsff "
+				+ "AND   ( fdsfsf = fdsf OR  fdsfsf = fdfsf) "
+				+ "AND  lfsdf LIKE '%fdsf%' "
+				+ "AND  ( fsdfs BETWEEN 99 AND 778) "
+				+ "AND  fsdfs < 877";
+				
 
 		Statement st = CCJSqlParserUtil.parse(varname1);
 		Select select = (Select) st;
