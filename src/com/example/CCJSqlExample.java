@@ -45,7 +45,7 @@ public class CCJSqlExample {
 		Statement st = CCJSqlParserUtil.parse(varname1);
 		Select select = (Select) st;
 
-		// set aliase if not provide
+		// set aliase if not provided
 
 		AddAliasesVisitor instance = new AddAliasesVisitor();
 		instance.setPrefix("A");
