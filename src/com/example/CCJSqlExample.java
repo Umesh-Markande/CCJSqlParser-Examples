@@ -35,7 +35,7 @@ public class CCJSqlExample {
 	public static void main(String[] args) throws JSQLParserException {
 		String varname1 = "" + "SELECT hallprefs.studentname as fdsf " + "    , hh.studentid as dfsd "
 				+ "    , hh.studentdesc " + "    , max(gkhk) , min( jgjg), hh.hallname,(select te from ta where fsdf = fsdf) "
-				+ "FROM students " + "INNER JOIN hallprefs "
+				+ ", ffsdf fd , ferwfsdfs frere FROM students " + "INNER JOIN hallprefs "
 				+ "    on ss.studentid = hallprefs.studentid left outer join fdsff on fsdfsfd = fsff "
 				+ "INNER JOIN halls hh " + "    on hp.hallid = hh.hallid cross join (select tst from tsdfs) where "
 				+ " gh=jgjh and tsfds = sdfd or fsdfsf = fdsff and (fdsfsf = fdsf or fdsfsf = fdfsf)"
@@ -45,7 +45,7 @@ public class CCJSqlExample {
 		Statement st = CCJSqlParserUtil.parse(varname1);
 		Select select = (Select) st;
 
-		// set aliase if not provided
+		// set aliase if not provide
 
 		AddAliasesVisitor instance = new AddAliasesVisitor();
 		instance.setPrefix("A");
@@ -69,11 +69,13 @@ public class CCJSqlExample {
 						System.out.println("sub select");
 					}
 				}
+				System.out.println(((SelectExpressionItem) item).getAlias().getName());
 				if (expr instanceof Column) {
 					Column col = (Column) expr;
 					// System.out.println(col.getColumnName()); // only column name without alise
 					// hh.dffs output dffs
 					Table table = col.getTable();
+					System.out.println(col.getName(true));
 					// System.out.println(table.getFullyQualifiedName());
 					selectColumnAliase.add("".equals(table.getFullyQualifiedName()) ? col.getColumnName()
 							: table.getFullyQualifiedName());
