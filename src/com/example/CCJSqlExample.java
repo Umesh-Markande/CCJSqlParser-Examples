@@ -34,7 +34,7 @@ public class CCJSqlExample {
 
 	public static void main(String[] args) throws JSQLParserException {
 		String varname1 = "" + "SELECT hallprefs.studentname as fdsf " + "    , hh.studentid as dfsd "
-				+ "    , hh.studentdesc " + "    , hh.hallname,(select te from ta where fsdf = fsdf) "
+				+ "    , hh.studentdesc " + "    , max(gkhk) , min( jgjg), hh.hallname,(select te from ta where fsdf = fsdf) "
 				+ "FROM students " + "INNER JOIN hallprefs "
 				+ "    on ss.studentid = hallprefs.studentid left outer join fdsff on fsdfsfd = fsff "
 				+ "INNER JOIN halls hh " + "    on hp.hallid = hh.hallid cross join (select tst from tsdfs) where "
