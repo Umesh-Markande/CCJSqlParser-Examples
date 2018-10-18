@@ -45,10 +45,9 @@ public class CCJSqlExample {
 				+ "ON              ss.studentid = hallprefs.studentid "
 				+ "LEFT OUTER JOIN fdsff "
 				+ "ON              fsdfsfd = fsff "
-				+ "INNER JOIN      halls hh \" + \" "
+				+ "INNER JOIN      halls hh "
 				+ "ON              hp.hallid = hh.hallid "
-				+ "CROSS JOIN ( SELECT tst   FROM   tsdfs) "
-			     // + " cross join dfdf where gh=jgjh ";
+				+ "CROSS JOIN ( SELECT tst   FROM   tsdfs) "		// + " cross join dfdf where gh=jgjh ";
 				+ "WHERE gh=jgjh "
 				+ "AND   tsfds = sdfd "
 				+ "OR    fsdfsf = fdsff "
