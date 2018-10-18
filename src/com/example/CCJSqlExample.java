@@ -61,7 +61,7 @@ public class CCJSqlExample {
 		Statement st = CCJSqlParserUtil.parse(varname1);
 		Select select = (Select) st;
 
-		// set aliase if not provide
+		// SET ALIASE IF NOT PROVIDED
 
 		AddAliasesVisitor instance = new AddAliasesVisitor();
 		instance.setPrefix("A");
@@ -71,7 +71,7 @@ public class CCJSqlExample {
 
 		System.out.println(ps.toString());
 
-		// select column item visitor with sub select
+		// SELECT COLUMN ITEM VISITOR WITH SUB SELECT
 
 		List<String> selectColumnAliase = new ArrayList<>();
 
@@ -99,7 +99,7 @@ public class CCJSqlExample {
 			}
 		}
 
-		// from table visitor
+		// FROM TABLE VISITOR
 
 		FromItem fromItem = ps.getFromItem();
 
@@ -107,7 +107,7 @@ public class CCJSqlExample {
 
 		System.out.println(fromAliase);
 
-		// join sub select item visitor
+		// JOIN SUB SELECT ITEM VISITOR
 
 		select.getSelectBody().accept(new SelectVisitorAdapter() {
 			@Override
@@ -119,7 +119,7 @@ public class CCJSqlExample {
 			}
 		});
 
-		// join table visitor
+		// JOIN TABLE VISITOR
 
 		List<Integer> removeJoinIndex = new ArrayList<>();
 		int index = 0;
