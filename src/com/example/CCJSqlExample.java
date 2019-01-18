@@ -105,6 +105,24 @@ public class CCJSqlExample {
 		String fromAliase = fromItem.getAlias() != null ? fromItem.getAlias().toString() : "";
 
 		System.out.println(fromAliase);
+		
+		// Remove Column from select query and also update group by and order by if it is persist
+		
+		int index = getIndexOfColumn("ygfd", ps.getSelectItems());;
+		
+		if(index != -1) {
+			index += 1;
+		}
+		
+		System.out.println("Before ==== \n"+ps.toString());
+		
+		updateGroupByCondition(ps, index);		
+		
+		updateOrderByCondition(ps, index);
+		
+		ps.getSelectItems().remove((index-1));
+		
+		System.out.println("After  ==== \n"+ps.toString());
 
 		// JOIN SUB SELECT ITEM VISITOR
 
@@ -255,4 +273,92 @@ public class CCJSqlExample {
 	 * ((net.sf.jsqlparser.schema.Column) selectitem).getName().equals(entityName)
 	 * && !StringUtils.isBlank(selectitem. .toString()); }
 	 */
+	private static void updateGroupByCondition(PlainSelect ps, int aliaseIndex) {
+		int index = 0;
+		List<String> groupByValueList = new ArrayList<>();
+		for (Expression item : ps.getGroupByColumnReferences()) {
+			groupByValueList.add(item.toString());
+			index++;
+		}
+		index = 0;
+		List<String> groupByValues = new ArrayList<>();
+		int removeGroupByIndex = -1;
+		for (String name : groupByValueList) {
+			if (isNumeric(name)) {
+				if (aliaseIndex == Integer.parseInt(name)) {
+					removeGroupByIndex = index;
+				}
+				if (aliaseIndex < Integer.parseInt(name) && index != Integer.parseInt(name)) {
+					groupByValues.add((Integer.parseInt(name) - 1) + "");
+				} else if (aliaseIndex != Integer.parseInt(name)) {
+					groupByValues.add((Integer.parseInt(name)) + "");
+				}
+			} else if (!name.toLowerCase().equals((((SelectExpressionItem)ps.getSelectItems().get((aliaseIndex-1))).getExpression().toString()).toLowerCase())
+					&& !name.toLowerCase().equals((((SelectExpressionItem)ps.getSelectItems().get((aliaseIndex-1))).getAlias().getName().toString()).toLowerCase())) {
+				groupByValues.add(name);
+			} else {
+				removeGroupByIndex = index;
+			}
+			index++;
+		}
+
+		if (removeGroupByIndex != -1)
+			ps.getGroupByColumnReferences().remove(removeGroupByIndex);
+
+		if (groupByValues.size() == 0) {
+			ps.setGroupByColumnReferences(null);
+		}
+
+		for (int k = 0; k < groupByValues.size(); k++) {
+			ps.getGroupByColumnReferences().set(k, new LongValue(groupByValues.get(k)));
+		}
+	}
+
+	private static void updateOrderByCondition(PlainSelect ps, int aliaseIndex) {
+		int index = 0;
+		List<OrderByElement> oldOrderByValueList = ps.getOrderByElements();
+		List<OrderByElement> newOrderByValueList = new ArrayList<>();
+		for (OrderByElement orderByElement : oldOrderByValueList) {
+			String name = orderByElement.getExpression().toString();
+			if (isNumeric(name)) {
+				if (aliaseIndex == Integer.parseInt(name)) {
+					continue;
+				}
+				if (aliaseIndex < Integer.parseInt(name) && aliaseIndex != Integer.parseInt(name)) {
+					orderByElement.setExpression(new LongValue(Integer.parseInt(name) - 1));
+					newOrderByValueList.add(orderByElement);
+				} else {
+					newOrderByValueList.add(orderByElement);
+				}
+			} else if (!name.toLowerCase().equals((((SelectExpressionItem)ps.getSelectItems().get((aliaseIndex-1))).getExpression().toString()).toLowerCase())
+					&& !name.toLowerCase().equals((((SelectExpressionItem)ps.getSelectItems().get((aliaseIndex-1))).getAlias().getName().toString()).toLowerCase())) {
+				newOrderByValueList.add(orderByElement);
+			} 
+			index++;
+		}
+
+		if (newOrderByValueList.size() > 0) {
+			ps.setOrderByElements(newOrderByValueList);
+		}else {
+			ps.setOrderByElements(null);
+		}
+
+	}
+	
+	private static int getIndexOfColumn(String entityName, List<SelectItem> select) {
+		int index = 0;
+		for (SelectItem item : select) {
+			if (item instanceof SelectExpressionItem) {
+				Expression expr = ((SelectExpressionItem) item).getExpression();
+				if(entityName.toLowerCase().equals(((SelectExpressionItem) item).getAlias().getName().toLowerCase())) {
+					return index;
+				}
+			}
+			index++;
+		}
+		return -1;
+	}
+	public static boolean isNumeric(String str){
+	    return str.matches("-?\\d+(.\\d+)?");
+	}
 }
